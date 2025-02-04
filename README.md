@@ -4,14 +4,14 @@ This project aims to explore and benchmark various machine learning models for d
 
 ### Notebooks and Files
 
-**experiment.ipynb**  
-This notebook details the entire process of running the algorithms on Chameleon, including launching nodes. Currently, we only run two clusters of Perseus since Trovi has only 1GB of memory, which we cannot exceed. For access to all 25 clusters, please contact me at xikang@uchicago.edu, and I will share the repository or you can download the dataset on https://tianchi.aliyun.com/dataset/144479, then run it locally by my scripts.
+**Team Project - Setting up experiment - Joshua Ludolf, Yesmin Hernandez-Reyna, Matthew Trevino.ipynb**  
+This notebook details the entire process of running the algorithms on Chameleon, including launching nodes. Currently, we only run two clusters of Perseus since Trovi has only 1GB of memory, which we cannot exceed. For access to all 25 clusters, please contact at xikang@uchicago.edu, and he will share the repository or you can download the dataset on https://tianchi.aliyun.com/dataset/144479, then run it locally by his & our scripts.
 
-**results_parser.ipynb**  
+**Team Project - Result Parser - Joshua Ludolf, Yesmin Hernandez, Matthew Trevino.ipynb**  
 This notebook shows the results from all the machine learning algorithms and provides analysis.
 
-**FSA-benchmark Final Report**  
-This report offers a comprehensive introduction to all the steps involved in the project.
+**REPRODUCTION_RESEARCH__FSA_BENCHMARK___Joshua_Ludolf__Yesmin_Reyna_Hernandez__Matthew_Trevino.pdf**  
+This report offers a comprehensive data collected from this research.
 
 ### Directory Structure
 
@@ -41,4 +41,13 @@ Contains the fail-slow detection algorithms and machine learning models.
 5. **GPT-4o-mini**  
    A large language model used to analyze disk metrics and detect fail-slow conditions. Please replace `openai_api_key` in the code where necessary.
 
-For detailed implementation of these models, please refer to the "FSA-benchmark Final Report."
+6. **Autoencoder**
+   Model utilizes an encoder and decoder method to analyze disk metrics and fail-slow detection.
+   
+7.  **Isolation Forest**
+    The algorithm created multiple iTrees, where each tree isolated observations by randomly selecting features and split values. 
+    
+8.  **Suport Vector Machine (SVM)**
+    The algorithm worked by finding the optimal hyperplane that maximized the margin between different classes. I employed techniques such as cross-validation to fine-tune the model parameters and prevent overfitting.
+
+For detailed implementation of these models, please refer to the [FSA-benchmark Final Report.](https://github.com/songxikang/FSA-benchmarking) & https://github.com/Joshua-Ludolf/FSA-benchmarking-Reproduction-Research
