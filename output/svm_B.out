@@ -1,0 +1,39 @@
+Script is being run with the following base path: data and index file: index/A_index.csv
+Current working directory: /home/cc
+Loading data from data/index/A_index.csv
+Loaded data with columns: ['cluster', 'host_name']
+Renamed columns: ['Cluster', 'Host']
+Data columns before ensuring necessary columns: ['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75']
+
+First few rows of the data before processing:
+     Cluster     Host      mean  ...      skew       q25       q75
+0  cluster_A   host_1  0.374540  ...  0.908266  0.341066  0.548734
+1  cluster_A  host_10  0.950714  ...  0.239562  0.113474  0.691895
+2  cluster_A  host_11  0.731994  ...  0.144895  0.924694  0.651961
+3  cluster_A  host_12  0.598658  ...  0.489453  0.877339  0.224269
+4  cluster_A  host_13  0.156019  ...  0.985650  0.257942  0.712179
+
+[5 rows x 10 columns]
+
+Data columns after ensuring necessary columns: ['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75', 'Disk']
+
+First few rows of the data:
+     Cluster     Host      mean       std  ...      skew       q25       q75   Disk
+0  cluster_A   host_1  0.374540  0.607545  ...  0.908266  0.341066  0.548734  disk1
+1  cluster_A  host_10  0.950714  0.170524  ...  0.239562  0.113474  0.691895  disk1
+2  cluster_A  host_11  0.731994  0.065052  ...  0.144895  0.924694  0.651961  disk1
+3  cluster_A  host_12  0.598658  0.948886  ...  0.489453  0.877339  0.224269  disk1
+4  cluster_A  host_13  0.156019  0.965632  ...  0.985650  0.257942  0.712179  disk1
+
+[5 rows x 11 columns]
+Processing data with 30 records
+
+Results DataFrame columns: ['Date', 'Cluster', 'Host', 'Disk', 'probability', 'Prediction']
+
+First few rows of the results:
+         Date    Cluster     Host   Disk  probability  Prediction
+0  2024-11-26  cluster_A   host_1  disk1     0.740070       False
+1  2024-11-26  cluster_A  host_10  disk1     0.998475        True
+2  2024-11-26  cluster_A  host_11  disk1     0.998151        True
+3  2024-11-26  cluster_A  host_12  disk1     0.998749        True
+4  2024-11-26  cluster_A  host_13  disk1     0.998406        True

@@ -1,0 +1,49 @@
+Script is being run with the following base path: data and index file: index/B_index.csv
+Current working directory: /home/cc
+Loading data from data/index/B_index.csv
+Loaded data with columns: ['cluster', 'host_name']
+Renamed columns: ['Cluster', 'Host']
+Data columns before ensuring necessary columns: ['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75']
+First few rows of the data before processing:
+     Cluster     Host      mean  ...      skew       q25       q75
+0  cluster_B   host_1  0.789519  ...  0.810493  0.564765  0.760452
+1  cluster_B  host_10  0.435888  ...  0.284421  0.762012  0.323475
+2  cluster_B  host_11  0.257502  ...  0.549718  0.108278  0.526344
+3  cluster_B  host_12  0.092870  ...  0.658665  0.986727  0.922166
+4  cluster_B  host_13  0.092034  ...  0.451722  0.223319  0.278216
+
+[5 rows x 10 columns]
+Data columns after ensuring necessary columns: ['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75', 'Disk']
+First few rows of the data:
+     Cluster     Host      mean       std  ...      skew       q25       q75   Disk
+0  cluster_B   host_1  0.789519  0.554476  ...  0.810493  0.564765  0.760452  disk1
+1  cluster_B  host_10  0.435888  0.939897  ...  0.284421  0.762012  0.323475  disk1
+2  cluster_B  host_11  0.257502  0.916182  ...  0.549718  0.108278  0.526344  disk1
+3  cluster_B  host_12  0.092870  0.446187  ...  0.658665  0.986727  0.922166  disk1
+4  cluster_B  host_13  0.092034  0.356829  ...  0.451722  0.223319  0.278216  disk1
+
+[5 rows x 11 columns]
+Processing data with 94 records
+Columns in aggregated_data before processing:
+['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75', 'Disk']
+First few rows in aggregated_data before processing:
+     Cluster     Host      mean       std  ...      skew       q25       q75   Disk
+0  cluster_B   host_1  0.789519  0.554476  ...  0.810493  0.564765  0.760452  disk1
+1  cluster_B  host_10  0.435888  0.939897  ...  0.284421  0.762012  0.323475  disk1
+2  cluster_B  host_11  0.257502  0.916182  ...  0.549718  0.108278  0.526344  disk1
+3  cluster_B  host_12  0.092870  0.446187  ...  0.658665  0.986727  0.922166  disk1
+4  cluster_B  host_13  0.092034  0.356829  ...  0.451722  0.223319  0.278216  disk1
+
+[5 rows x 11 columns]
+Initialized new model processor
+Feature matrix shape: (94, 8)
+Fitted new model
+Generated 5 anomalies
+Results DataFrame columns: ['Date', 'Cluster', 'Host', 'Disk', 'Prediction']
+First few rows of the results:
+         Date    Cluster     Host   Disk  Prediction
+0  2024-11-26  cluster_B   host_1  disk1       False
+1  2024-11-26  cluster_B  host_10  disk1       False
+2  2024-11-26  cluster_B  host_11  disk1       False
+3  2024-11-26  cluster_B  host_12  disk1       False
+4  2024-11-26  cluster_B  host_13  disk1       False

@@ -1,0 +1,35 @@
+2024-11-26 23:08:48.717732: I tensorflow/core/util/port.cc:110] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-11-26 23:08:48.719534: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2024-11-26 23:08:48.756745: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2024-11-26 23:08:48.757132: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-11-26 23:08:49.320136: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Script is being run with the following base path: data and index file: index/A_index.csv
+Current working directory: /home/cc
+Loading data from data/index/A_index.csv
+Loaded data with columns: ['cluster', 'host_name']
+Renamed columns: ['Cluster', 'Host']
+Data columns before processing: ['Cluster', 'Host', 'mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75', 'target']
+
+First few rows of the data:
+     Cluster     Host      mean       std  ...      skew       q25       q75  target
+0  cluster_A   host_1  0.374540  0.607545  ...  0.908266  0.341066  0.548734       0
+1  cluster_A  host_10  0.950714  0.170524  ...  0.239562  0.113474  0.691895       0
+2  cluster_A  host_11  0.731994  0.065052  ...  0.144895  0.924694  0.651961       0
+3  cluster_A  host_12  0.598658  0.948886  ...  0.489453  0.877339  0.224269       1
+4  cluster_A  host_13  0.156019  0.965632  ...  0.985650  0.257942  0.712179       0
+
+[5 rows x 11 columns]
+Numeric columns for model training: ['mean', 'std', 'min', 'max', 'median', 'skew', 'q25', 'q75']
+Shape of scaled data: (30, 8)
+
+Training autoencoder model:
+Epoch 1: loss = 1.186835, val_loss = 1.514844Epoch 2: loss = 1.185929, val_loss = 1.513982Epoch 3: loss = 1.185024, val_loss = 1.513124Epoch 4: loss = 1.184121, val_loss = 1.512268Epoch 5: loss = 1.183219, val_loss = 1.511415Epoch 6: loss = 1.182320, val_loss = 1.510568Epoch 7: loss = 1.181422, val_loss = 1.509726Epoch 8: loss = 1.180526, val_loss = 1.508890Epoch 9: loss = 1.179633, val_loss = 1.508062Epoch 10: loss = 1.178741, val_loss = 1.507242Epoch 11: loss = 1.177851, val_loss = 1.506433Epoch 12: loss = 1.176964, val_loss = 1.505634Epoch 13: loss = 1.176078, val_loss = 1.504849Epoch 14: loss = 1.175195, val_loss = 1.504077Epoch 15: loss = 1.174313, val_loss = 1.503320Epoch 16: loss = 1.173434, val_loss = 1.502578Epoch 17: loss = 1.172556, val_loss = 1.501851Epoch 18: loss = 1.171681, val_loss = 1.501139Epoch 19: loss = 1.170807, val_loss = 1.500442Epoch 20: loss = 1.169936, val_loss = 1.499758Epoch 21: loss = 1.169066, val_loss = 1.499087Epoch 22: loss = 1.168199, val_loss = 1.498427Epoch 23: loss = 1.167333, val_loss = 1.497779Epoch 24: loss = 1.166470, val_loss = 1.497140Epoch 25: loss = 1.165609, val_loss = 1.496510Epoch 26: loss = 1.164749, val_loss = 1.495888Epoch 27: loss = 1.163891, val_loss = 1.495274Epoch 28: loss = 1.163036, val_loss = 1.494667Epoch 29: loss = 1.162182, val_loss = 1.494066Epoch 30: loss = 1.161330, val_loss = 1.493472Epoch 31: loss = 1.160480, val_loss = 1.492884Epoch 32: loss = 1.159632, val_loss = 1.492302Epoch 33: loss = 1.158786, val_loss = 1.491725Epoch 34: loss = 1.157941, val_loss = 1.491153Epoch 35: loss = 1.157099, val_loss = 1.490586Epoch 36: loss = 1.156258, val_loss = 1.490023Epoch 37: loss = 1.155419, val_loss = 1.489465Epoch 38: loss = 1.154581, val_loss = 1.488912Epoch 39: loss = 1.153745, val_loss = 1.488363Epoch 40: loss = 1.152911, val_loss = 1.487818Epoch 41: loss = 1.152078, val_loss = 1.487278Epoch 42: loss = 1.151247, val_loss = 1.486741Epoch 43: loss = 1.150417, val_loss = 1.486208Epoch 44: loss = 1.149589, val_loss = 1.485679Epoch 45: loss = 1.148762, val_loss = 1.485154Epoch 46: loss = 1.147936, val_loss = 1.484632Epoch 47: loss = 1.147112, val_loss = 1.484114Epoch 48: loss = 1.146289, val_loss = 1.483600Epoch 49: loss = 1.145468, val_loss = 1.483088Epoch 50: loss = 1.144647, val_loss = 1.482580
+
+Training completed!
+Final training loss: 1.144647
+Final validation loss: 1.482580
+Autoencoder model saved successfully.
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 49ms/step
+/home/cc/.local/lib/python3.8/site-packages/keras/src/engine/training.py:3000: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
