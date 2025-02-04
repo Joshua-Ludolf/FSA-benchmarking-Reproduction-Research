@@ -41,13 +41,13 @@ Contains the fail-slow detection algorithms and machine learning models.
 5. **GPT-4o-mini**  
    A large language model used to analyze disk metrics and detect fail-slow conditions. Please replace `openai_api_key` in the code where necessary.
 
-6. **Autoencoder**
+6. **Autoencoder** <br>
    Model utilizes an encoder and decoder method to analyze disk metrics and fail-slow detection.
    
-7.  **Isolation Forest**
-    The algorithm created multiple iTrees, where each tree isolated observations by randomly selecting features and split values. 
+7.  **Isolation Forest** <br>
+    The algorithm created multiple iTrees, where each tree isolated observations by randomly selecting features and split values.
     
-8.  **Suport Vector Machine (SVM)**
+8.  **Suport Vector Machine (SVM)** <br>
     The algorithm worked by finding the optimal hyperplane that maximized the margin between different classes. I employed techniques such as cross-validation to fine-tune the model parameters and prevent overfitting.
 
 For detailed implementation of these models, please refer to the [FSA-benchmark Final Report.](https://github.com/songxikang/FSA-benchmarking) & https://github.com/Joshua-Ludolf/FSA-benchmarking-Reproduction-Research
