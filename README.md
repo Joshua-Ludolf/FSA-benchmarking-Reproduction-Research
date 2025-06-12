@@ -49,5 +49,3 @@ Contains the fail-slow detection algorithms and machine learning models.
     
 8.  **Suport Vector Machine (SVM)** <br>
     The algorithm worked by finding the optimal hyperplane that maximized the margin between different classes. I employed techniques such as cross-validation to fine-tune the model parameters and prevent overfitting.
-
-For detailed implementation of these models, please refer to the [FSA-benchmark Final Report.](https://github.com/songxikang/FSA-benchmarking) & https://github.com/Joshua-Ludolf/FSA-benchmarking-Reproduction-Research
