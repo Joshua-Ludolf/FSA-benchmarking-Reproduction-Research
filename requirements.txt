@@ -285,7 +285,7 @@ pytoolconfig==1.2.6
 pytz==2024.1
 pyuca==1.2
 pyviz_comms==3.0.2
-PyWavelets==1.8.0
+PyWavelets==1.9.0
 pywin32==308
 pywin32-ctypes==0.2.2
 pywinpty==2.0.15
