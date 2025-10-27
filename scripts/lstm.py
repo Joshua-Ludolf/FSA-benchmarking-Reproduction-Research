@@ -16,7 +16,10 @@ RANDOM_SEED = 42
 def load_host(data_path, host_name):
     # Load and concatenate all CSV files for a specific host
     df_ret = pd.DataFrame()
-    dir_path = f"{data_path}/{host_name}"
+    dir_path = os.path.join(data_path, host_name)
+    if not os.path.isdir(dir_path):
+        # Return empty to indicate no data for this host
+        return df_ret
     for filename in os.listdir(dir_path):
         if len(filename) == 14 and filename.endswith('.csv'):
             file_path = os.path.join(dir_path, filename)
@@ -32,7 +35,9 @@ def load_host(data_path, host_name):
 def load_host_by_days(data_path, host_name):
     # Load data for each host and organize by day
     day_data = {}
-    dir_path = f"{data_path}/{host_name}"
+    dir_path = os.path.join(data_path, host_name)
+    if not os.path.isdir(dir_path):
+        return day_data
     for filename in os.listdir(dir_path):
         file_path = os.path.join(dir_path, filename)
         if len(filename) == 14 and filename.endswith('.csv'):
@@ -63,6 +68,8 @@ def df_to_sequences(df, disk_id, seq_length=SEQ_LENGTH, latency_only=LATENCY_ONL
 def host_to_sequences(data_path, host_name, seq_length=SEQ_LENGTH, latency_only=LATENCY_ONLY):
     # Generate sequences for all disks in a host
     df_host = load_host(data_path, host_name)
+    if df_host is None or df_host.empty:
+        return np.array([]), np.array([])
     disk_ids = df_host['disk_id'].unique()
     X, y = [], []
     for id in disk_ids:
@@ -101,13 +108,16 @@ def train(perseus_dir, cluster_host_mapping, train_cluster):
     scaler_y = StandardScaler()
     TRAIN_HOSTS = cluster_host_mapping[train_cluster]
     X, y = create_training_vectors(f"{perseus_dir}/{train_cluster}", TRAIN_HOSTS, latency_only=True, seq_length=8)
+    if X.size == 0 or y.size == 0:
+        raise ValueError("No training sequences found. Ensure per-host CSVs exist for listed hosts.")
     # Scale the features and labels
     X_scaled = scaler_X.fit_transform(X.reshape(-1, X.shape[-1])).reshape(X.shape)
     y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).reshape(y.shape)
     X_train, y_train = X_scaled, y_scaled
     np.random.seed(RANDOM_SEED)
     # Randomly sample data for training
-    indicator = np.random.binomial(1, 80000/len(X_train), len(X_train)).astype(bool)
+    p = min(1.0, max(0.01, 80000/len(X_train)))
+    indicator = np.random.binomial(1, p, len(X_train)).astype(bool)
     X_train = X_train[indicator]
     y_train = y_train[indicator]
     X_train_tensors = torch.tensor(X_train, dtype=torch.float32)

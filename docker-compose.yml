@@ -1,0 +1,131 @@
+services:
+  # ============================================
+  # Hybrid Deep-Learning Model Service
+  # ============================================
+  hybrid-model:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fsa-hybrid-model
+    image: fsa-hybrid-model:latest
+    
+    # Environment variables
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      TORCH_HOME: "/tmp/.torch"
+    
+    # Volume mounts
+    volumes:
+      - ./data:/app/data:ro          # Read-only access to data
+      - ./index:/app/index:ro        # Read-only access to indices
+      - ./output:/app/output:rw      # Write output results
+      - ./scripts:/app/scripts:ro    # Read-only scripts
+    
+    # Port mapping for Jupyter (optional)
+    ports:
+      - "8888:8888"
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Default command
+    command: python scripts/hybrid_cnn_rnn_attention.py -h
+
+  # ============================================
+  # Jupyter Lab Service (for interactive work)
+  # ============================================
+  jupyter:
+    image: fsa-hybrid-model:latest
+    container_name: fsa-jupyter
+    
+    environment:
+      PYTHONUNBUFFERED: "1"
+      TORCH_HOME: "/tmp/.torch"
+    
+    volumes:
+      - ./data:/app/data:ro
+      - ./index:/app/index:ro
+      - ./output:/app/output:rw
+      - ./scripts:/app/scripts:rw
+      - ./*.ipynb:/app/
+    
+    ports:
+      - "8888:8888"
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+    
+    command: >
+      jupyter lab 
+      --ip=0.0.0.0 
+      --port=8888 
+      --allow-root 
+      --NotebookApp.token='' 
+      --NotebookApp.password=''
+    
+    restart: unless-stopped
+
+  # ============================================
+  # Training Service (GPU-enabled if available)
+  # ============================================
+  train:
+    image: fsa-hybrid-model:latest
+    container_name: fsa-train
+    
+    environment:
+      PYTHONUNBUFFERED: "1"
+      TORCH_HOME: "/tmp/.torch"
+    
+    volumes:
+      - ./data:/app/data:ro
+      - ./index:/app/index:ro
+      - ./output:/app/output:rw
+      - ./scripts:/app/scripts:ro
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+    
+    # Uncomment to use GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    
+    command: >
+      python scripts/hybrid_cnn_rnn_attention.py 
+      --perseus_dir data 
+      --index_file index/all_drive_info.csv 
+      --out_dir output 
+      --batch_size 128 
+      --test_fraction 0.1
+    
+    restart: "no"
+
+networks:
+  default:
+    name: fsa-network
+    driver: bridge

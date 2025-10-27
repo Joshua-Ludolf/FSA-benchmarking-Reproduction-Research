@@ -9,6 +9,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.metrics import roc_auc_score
 import warnings
 from scipy import stats
+import argparse
 
 def load_and_preprocess_data(base_path, index_file):
     """Enhanced data loading and preprocessing with additional features"""
@@ -51,11 +52,12 @@ def load_and_preprocess_data(base_path, index_file):
         
         # Add disk information
         data['Disk'] = 'disk1'
-        
-        # Remove any infinite or NaN values
+
+        # Remove any infinite or NaN values; fill only numeric columns
         data = data.replace([np.inf, -np.inf], np.nan)
-        data = data.fillna(data.mean())
-        
+        numeric_cols = data.select_dtypes(include=[np.number]).columns
+        data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
+
         print("Data preprocessing completed successfully")
         return data
         
@@ -143,25 +145,21 @@ def train_svm_model(data):
             'Host': data['Host'],
             'Disk': data['Disk'],
             'probability': normalized_scores,
+            'score': normalized_scores,  # Always emit a 'score' column for parser
             'Prediction': normalized_scores > 0.85,  # Using fixed threshold for anomaly detection
             'anomaly_score': anomaly_scores,
             'score_threshold': threshold
         })
-        
-        # Calculate confidence metrics
         predictions_df['confidence'] = 1 - (1 / (1 + np.exp(-(anomaly_scores - threshold))))
-        
-        # Add feature importance approximation
         feature_importance = calculate_feature_importance(X_scaled, svm)
-        print("\nFeature Importance:")
-        for feature, importance in feature_importance.items():
-            print(f"{feature}: {importance:.4f}")
-        
+        if feature_importance:
+            print("\nFeature Importance:")
+            for feature, importance in feature_importance.items():
+                print(f"{feature}: {importance:.4f}")
         print("\nModel Training Summary:")
         print(f"Total samples: {len(predictions_df)}")
         print(f"Anomalies detected: {predictions_df['Prediction'].sum()}")
         print(f"Anomaly rate: {(predictions_df['Prediction'].sum() / len(predictions_df)) * 100:.2f}%")
-        
         return predictions_df
         
     except Exception as e:
@@ -170,20 +168,24 @@ def train_svm_model(data):
 
 def calculate_feature_importance(X, model):
     """Calculate approximate feature importance for OneClassSVM"""
+    if not hasattr(model, 'support_vectors_') or not hasattr(model, 'dual_coef_'):
+        return {}
     support_vectors = model.support_vectors_
     dual_coef = np.abs(model.dual_coef_[0])
-    
-    # Calculate importance as the weighted sum of support vectors
     importance = np.sum(support_vectors * dual_coef[:, np.newaxis], axis=0)
     importance = np.abs(importance)
-    importance = importance / np.sum(importance)
-    
-    return dict(zip(select_features(pd.DataFrame()).columns, importance))
+    if importance.sum() > 0:
+        importance = importance / np.sum(importance)
+    feature_cols = [
+        'mean', 'std', 'min', 'max', 'median', 
+        'skew', 'kurtosis', 'q25', 'q75', 
+        'time_since_last_failure', 'failure_count_7d',
+        'iqr', 'cv', 'range', 'mad'
+    ]
+    return dict(zip(feature_cols, importance))
 
-def main():
+def main(base_path: str = "data", index_file: str = "index/A_index.csv"):
     # Define paths
-    base_path = "data"
-    index_file = "index/A_index.csv"
     
     # Create output directory
     os.makedirs('output', exist_ok=True)
@@ -220,4 +222,8 @@ def main():
         raise
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Run SVM anomaly detection with engineered features')
+    parser.add_argument('-p', '--path', default='data', help='Base path to the data directory (PerseusDir)')
+    parser.add_argument('-i', '--index_file', default='index/A_index.csv', help='Index file path listing clusters/hosts')
+    args = parser.parse_args()
+    main(args.path, args.index_file)

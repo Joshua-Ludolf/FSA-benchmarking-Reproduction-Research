@@ -19,6 +19,11 @@ class IsolationForestClassifier:
         X_scaled = self.scaler.transform(X)
         return self.model.predict(X_scaled)
 
+    def decision_function(self, X):
+        X_scaled = self.scaler.transform(X)
+        # Higher scores indicate normal points; more negative = more anomalous
+        return self.model.decision_function(X_scaled)
+
 def load_data(base_path, index_file):
     file_path = os.path.join(base_path, index_file)
     print(f"Loading data from {file_path}")
@@ -85,15 +90,26 @@ def generate_iforest_response(aggregated_data, model_processor=None):
         print(f"Fitted new model")
     
     predictions = model_processor.predict(features)
+    decisions = model_processor.decision_function(features)
+    # Convert to anomaly_score where higher means more anomalous
+    anomaly_scores = -decisions
+    # Normalize anomaly score to [0,1] for convenience (robust to constant values)
+    min_s, max_s = anomaly_scores.min(), anomaly_scores.max()
+    if max_s - min_s > 1e-12:
+        norm_scores = (anomaly_scores - min_s) / (max_s - min_s)
+    else:
+        norm_scores = np.zeros_like(anomaly_scores)
     
     results = []
-    for (cluster, host_name), pred in zip(cluster_host_pairs, predictions):
+    for idx, ((cluster, host_name), pred) in enumerate(zip(cluster_host_pairs, predictions)):
         result = {
             'Date': pd.to_datetime('today').strftime('%Y-%m-%d'),
             'Cluster': cluster,
             'Host': host_name,
             'Disk': 'disk1',
-            'Prediction': pred == -1
+            'Prediction': pred == -1,
+            'anomaly_score': float(anomaly_scores[idx]),
+            'score': float(norm_scores[idx])
         }
         results.append(result)
     

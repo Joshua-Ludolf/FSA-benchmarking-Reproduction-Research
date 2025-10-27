@@ -1,0 +1,3 @@
+date,cluster,host,disk,score,pred
+2025-10-09,cluster_A,host_synth1,disk1,,True
+2025-10-09,cluster_B,host_synth1,disk1,,True

@@ -177,7 +177,10 @@ def process_Perseus_multi_pred(perseus_dir, cluster_host_mapping, err_df):
 
         date_dfs = defaultdict(list)
         for host in hosts:
-            cluster_path = os.path.join(perseus_dir, f"{cluster}/{host}/")
+            cluster_path = os.path.join(perseus_dir, cluster, host)
+            if not os.path.isdir(cluster_path):
+                print(f"Skipping host '{host}': directory not found at {cluster_path}")
+                continue
             for filename in os.listdir(cluster_path):
                 if filename.endswith(".csv") and len(filename) == 14:
                     file_path = os.path.join(cluster_path, filename)
@@ -224,6 +227,11 @@ def process_Perseus_multi_pred(perseus_dir, cluster_host_mapping, err_df):
 def main(perseus_dir, input_file):
     all_drive_info_path = input_file
     err_path = f"{perseus_dir}/slow_drive_info.csv"
+    # Fallback: if not under perseus_dir, try alongside the input_file
+    if not os.path.exists(err_path):
+        candidate = os.path.join(os.path.dirname(all_drive_info_path), 'slow_drive_info.csv')
+        if os.path.exists(candidate):
+            err_path = candidate
 
     if not os.path.exists(all_drive_info_path) or not os.path.exists(err_path):
         print("Required files not found in the specified directory.")

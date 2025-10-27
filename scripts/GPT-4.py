@@ -4,8 +4,10 @@ import argparse
 import math
 from openai import OpenAI
 
-# Set your OpenAI API key from the environment variables
-os.environ['OPENAI_API_KEY'] = 'key'
+# Read OpenAI API key from environment variable; fail fast if missing
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if not OPENAI_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY environment variable is not set. Please set it before running GPT-4.py.")
 
 def generate_gpt4o_response(cluster, day, aggregated_data, use_statistics):
     user_message = f"Below is the disk performance data of {cluster} for {day}\n"
